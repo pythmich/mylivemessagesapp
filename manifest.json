@@ -1,0 +1,15 @@
+{
+    "name": "Voices of Courage",
+    "short_name": "Voices",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#f0f8ff",
+    "theme_color": "#ff6347",
+    "icons": [
+      {
+        "src": "icon.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ]
+  }
