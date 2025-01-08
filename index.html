@@ -82,36 +82,41 @@
 <body>
     <h1>Voices of Courage: Anonymous Concerns About Bullying</h1>
     <form id="messageForm">
-        <textarea id="messageInput" placeholder="Express your thoughts here, your name wont be shown.." rows="4" cols="50"></textarea><br>
+        <textarea id="messageInput" placeholder="Express your feelings here, your name wont be shown..." rows="4" cols="50"></textarea><br>
         <button type="submit">Submit</button>
     </form>
     <div id="messages"></div>
-    
-    <script src="sw.js"></script>
+
     <script>
         const messageForm = document.getElementById('messageForm');
         const messageInput = document.getElementById('messageInput');
         const messages = document.getElementById('messages');
 
-        const ws = new WebSocket('ws://localhost:8080');
+        let ws;
+        function connectWebSocket() {
+            ws = new WebSocket('ws://localhost:8080');
 
-        ws.onopen = function() {
-            console.log('Connected to WebSocket server');
-        };
+            ws.onopen = function() {
+                console.log('Connected to WebSocket server');
+            };
 
-        ws.onmessage = function(event) {
-            console.log('Message received: ', event.data);
-            const messageElement = createMessageElement(event.data);
-            messages.appendChild(messageElement);
-        };
+            ws.onmessage = function(event) {
+                console.log('Message received: ', event.data);
+                const messageElement = createMessageElement(event.data);
+                messages.appendChild(messageElement);
+            };
 
-        ws.onerror = function(error) {
-            console.error('WebSocket Error: ', error);
-        };
+            ws.onerror = function(error) {
+                console.error('WebSocket Error: ', error);
+            };
 
-        ws.onclose = function() {
-            console.log('Disconnected from WebSocket server');
-        };
+            ws.onclose = function() {
+                console.log('Disconnected from WebSocket server');
+                setTimeout(connectWebSocket, 5000); // Try to reconnect after 5 seconds
+            };
+        }
+
+        connectWebSocket();
 
         messageForm.addEventListener('submit', function(event) {
             event.preventDefault();
@@ -119,8 +124,14 @@
             const messageText = messageInput.value.trim();
             if (messageText) {
                 console.log('Sending message: ', messageText);
-                ws.send(messageText);
+                if (ws.readyState === WebSocket.OPEN) {
+                    ws.send(messageText);
+                } else {
+                    console.log('WebSocket is not open.');
+                }
                 messageInput.value = '';
+            } else {
+                console.log('Message input is empty.');
             }
         });
 
