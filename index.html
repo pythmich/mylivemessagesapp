@@ -7,11 +7,9 @@
     <link rel="manifest" href="manifest.json">
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
             background-color: #ffe4e1; /* Misty Rose */
         }
         h1 {
@@ -25,14 +23,28 @@
             max-width: 500px;
         }
         #messages {
-            width: 100%;
-            max-width: 500px;
             border: 1px solid #ffdab9; /* Peach Puff */
-            padding: 10px;
             background-color: #fff5ee; /* Lavender Blush */
-            overflow-wrap: break-word;
             border-radius: 15px;
+            width: 80%;
+            height: 100px;
+            margin: 20px auto;
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+            resize: vertical;
         }
+        
+        #board{
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+
+        }
+
         .message, .reply {
             margin-bottom: 10px;
             padding: 10px;
@@ -47,19 +59,42 @@
         button {
             background-color: #ff4500; /* Orange Red */
             color: white;
+             border-radius: 10px;  
+            display: block;
+            margin: 0 auto 20px;
+            padding: 10px 30px;
             border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 1.2em;
-            margin: 4px 2px;
             cursor: pointer;
-            border-radius: 10px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #noteInput {
+            width: 80%;
+            height: 100px;
+            margin: 20px auto;
+            display: block;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+
+        .note{
+            background-color: #ffeb3b;
+            padding: 15px;
+            min-height: 150px;
+            border-radius: 5px;
+            box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            animation: fadeIn 0.3s ease-in;
         }
         button:hover {
             background-color: #ff6347; /* Tomato */
         }
+
         textarea {
             border-radius: 10px;
             padding: 10px;
@@ -81,97 +116,61 @@
 </head>
 <body>
     <h1>Voices of Courage: Anonymous Concerns About Bullying</h1>
-    <form id="messageForm">
-        <textarea id="messageInput" placeholder="Express your feelings here, your name wont be shown..." rows="4" cols="50"></textarea><br>
-        <button type="submit">Submit</button>
-    </form>
-    <div id="messages"></div>
+    <textarea id="messages">Feel free to express yourself here</textarea>
+    <button id="button">Let It Out!</button>
+    <div id="board"></div>
 
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
-        const messageForm = document.getElementById('messageForm');
-        const messageInput = document.getElementById('messageInput');
-        const messages = document.getElementById('messages');
 
-        let ws;
-        function connectWebSocket() {
-            ws = new WebSocket('ws://localhost:8080');
+        const firebaseConfig = {
+        apiKey: "AIzaSyDTywvj4dlN5VHq7EqrI-Utrh7VbIiWM_Q",
+        authDomain: "notification-sync-797bc.firebaseapp.com",
+        databaseURL: "https://notification-sync-797bc-default-rtdb.firebaseio.com",
+        projectId: "notification-sync-797bc",
+        storageBucket: "notification-sync-797bc.firebasestorage.app",
+        messagingSenderId: "259481531124",
+        appId: "1:259481531124:web:3afb6a2e906140cb0924a1",
+        measurementId: "G-ZRZ633C4G8"
+        };
 
-            ws.onopen = function() {
-                console.log('Connected to WebSocket server');
-            };
+        firebase.initializeApp(firebaseConfig);
+        const database= firebase.database();
+        const notesRef = database.ref('notes');
 
-            ws.onmessage = function(event) {
-                console.log('Message received: ', event.data);
-                const messageElement = createMessageElement(event.data);
-                messages.appendChild(messageElement);
-            };
 
-            ws.onerror = function(error) {
-                console.error('WebSocket Error: ', error);
-            };
+        function addNote(){
+            const noteInput = document.getElementById('messages');
+            const noteText = noteInput.value.trim();
 
-            ws.onclose = function() {
-                console.log('Disconnected from WebSocket server');
-                setTimeout(connectWebSocket, 5000); // Try to reconnect after 5 seconds
-            };
-        }
+            // to do remove banned word !=
+            if(noteText){
 
-        connectWebSocket();
-
-        messageForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const messageText = messageInput.value.trim();
-            if (messageText) {
-                console.log('Sending message: ', messageText);
-                if (ws.readyState === WebSocket.OPEN) {
-                    ws.send(messageText);
-                } else {
-                    console.log('WebSocket is not open.');
-                }
-                messageInput.value = '';
-            } else {
-                console.log('Message input is empty.');
+                notesRef.push({
+                    text : noteText,
+                    timestamp : firebase.database.ServerValue.TIMESTAMP
+                });
+                noteInput.value = ''
             }
-        });
-
-        function createMessageElement(text) {
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message';
-            messageElement.textContent = text;
-
-            const replyButton = document.createElement('button');
-            replyButton.textContent = 'Reply';
-            messageElement.appendChild(replyButton);
-
-            replyButton.addEventListener('click', function() {
-                const enteredPassword = prompt('Enter password to reply:');
-                if (enteredPassword === 'mySecretPassword') { // Replace with your actual password
-                    const replyForm = document.createElement('form');
-                    replyForm.innerHTML = `
-                        <textarea placeholder="Reply..." rows="2" cols="40"></textarea><br>
-                        <button type="submit">Submit Reply</button>
-                    `;
-                    messageElement.appendChild(replyForm);
-
-                    replyForm.addEventListener('submit', function(event) {
-                        event.preventDefault();
-                        const replyText = replyForm.querySelector('textarea').value.trim();
-                        if (replyText) {
-                            const replyElement = document.createElement('div');
-                            replyElement.className = 'reply';
-                            replyElement.textContent = replyText;
-                            messageElement.appendChild(replyElement);
-                            replyForm.remove();
-                        }
-                    });
-                } else {
-                    alert('Incorrect password. You are not authorized to reply.');
-                }
-            });
-
-            return messageElement;
         }
+
+        document.getElementById('button').addEventListener('click', addNote);
+     
+        notesRef.orderByChild('timestamp').on('value', (snapshot) => {
+            const board = document.getElementById('board');
+            board.innerHTML = ''; 
+
+            snapshot.forEach((childSnapshot) => {
+                const note = childSnapshot.val();
+                const noteElement = document.createElement('div');
+                noteElement.className = 'note';
+                noteElement.textContent = note.text;
+                board.appendChild(noteElement);
+            });
+        });
+
     </script>
 </body>
 </html>
