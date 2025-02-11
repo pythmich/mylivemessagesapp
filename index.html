@@ -95,6 +95,40 @@
             background-color: #ff6347; /* Tomato */
         }
 
+        .note.reply {
+            background-color: #a5d6a7;
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .note-actions {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+        }
+
+        .reply-btn, .delete-btn {
+            margin-left: 5px;
+            padding: 2px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+            border-radius: 3px;
+            color: white;
+        }
+
+        .reply-btn {
+            background-color: #4CAF50;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+        }
+
+        .note-container {
+            margin-bottom: 20px;
+        }
+
         textarea {
             border-radius: 10px;
             padding: 10px;
@@ -116,7 +150,7 @@
 </head>
 <body>
     <h1>Voices of Courage: Anonymous Concerns About Bullying</h1>
-    <textarea id="messages">Feel free to express yourself here</textarea>
+    <textarea id="messages" placeholder="Feel free to express yourself here"></textarea>
     <button id="button">Let It Out!</button>
     <div id="board"></div>
 
@@ -124,7 +158,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
-
+        const PASSWORD = "admin123";
         const firebaseConfig = {
         apiKey: "AIzaSyDTywvj4dlN5VHq7EqrI-Utrh7VbIiWM_Q",
         authDomain: "notification-sync-797bc.firebaseapp.com",
@@ -161,15 +195,88 @@
         notesRef.orderByChild('timestamp').on('value', (snapshot) => {
             const board = document.getElementById('board');
             board.innerHTML = ''; 
+            const notes = [];
 
-            snapshot.forEach((childSnapshot) => {
-                const note = childSnapshot.val();
-                const noteElement = document.createElement('div');
-                noteElement.className = 'note';
-                noteElement.textContent = note.text;
-                board.appendChild(noteElement);
-            });
+            snapshot.forEach(childSnapshot => {
+                notes.push({
+                    key: childSnapshot.key,
+                    ...childSnapshot.val()
+                });
+
+            const parentNotes = notes.filter(note => !note.parentId);
+            const replyNotes = notes.filter(note => note.parentId);
+
+            parentNotes.forEach(parentNote => {
+                const parentContainer = document.createElement('div');
+                parentContainer.className = 'note-container';
+                
+                const noteElement = createNoteElement(parentNote);
+                parentContainer.appendChild(noteElement);
+
+                const reply = replyNotes.find(r => r.parentId === parentNote.key);
+                if (reply) {
+                    const replyElement = createNoteElement(reply, true);
+                    parentContainer.appendChild(replyElement);
+                }
+
+                board.appendChild(parentContainer);
+            });     
         });
+
+
+      function createNoteElement(noteData, isReply = false) {
+            const noteElement = document.createElement('div');
+            noteElement.className = `note${isReply ? ' reply' : ''}`;
+            noteElement.textContent = noteData.text;
+
+            if (!isReply) {
+                const actions = document.createElement('div');
+                actions.className = 'note-actions';
+                
+                const replyBtn = document.createElement('button');
+                replyBtn.className = 'reply-btn';
+                replyBtn.textContent = 'Reply';
+                replyBtn.onclick = () => handleReply(noteData.key);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.onclick = () => handleDelete(noteData.key);
+                
+                actions.append(replyBtn, deleteBtn);
+                noteElement.appendChild(actions);
+            }
+
+            return noteElement;
+        }
+
+      function handleReply(parentKey) {
+            const enteredPassword = prompt('Enter password to reply:');
+            if (enteredPassword !== PASSWORD) return alert('Incorrect password!');
+
+            notesRef.orderByChild('parentId').equalTo(parentKey).once('value', snapshot => {
+                if (snapshot.exists()) return alert('Only one reply allowed per note!');
+                
+                const replyText = prompt('Enter your reply:');
+                if (replyText) {
+                    notesRef.push({
+                        text: replyText,
+                        parentId: parentKey,
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
+                    });
+                }
+            });
+        }
+
+    function handleDelete(noteKey) {
+            const enteredPassword = prompt('Enter password to delete:');
+            if (enteredPassword !== PASSWORD) return alert('Incorrect password!');
+
+            notesRef.child(noteKey).remove();
+            notesRef.orderByChild('parentId').equalTo(noteKey).once('value', snapshot => {
+                snapshot.forEach(childSnapshot => childSnapshot.ref.remove());
+            });
+        }
 
     </script>
 </body>
