@@ -32,7 +32,7 @@
             display: block;
             padding: 10px;
             font-size: 16px;
-            resize: vertical;
+            resize:vertical;
         }
         
         #board{
@@ -41,7 +41,7 @@
             gap: 20px;
             padding: 20px;
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 0 auto;
 
         }
 
@@ -90,6 +90,7 @@
             word-wrap: break-word;
             white-space: pre-wrap;
             animation: fadeIn 0.3s ease-in;
+            position: relative;
         }
         button:hover {
             background-color: #ff6347; /* Tomato */
@@ -127,6 +128,11 @@
 
         .note-container {
             margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(10px);}
+            to {opacity: 1; transform: translateY(0);}
         }
 
         textarea {
@@ -202,6 +208,7 @@
                     key: childSnapshot.key,
                     ...childSnapshot.val()
                 });
+            });
 
             const parentNotes = notes.filter(note => !note.parentId);
             const replyNotes = notes.filter(note => note.parentId);
@@ -222,7 +229,7 @@
                 board.appendChild(parentContainer);
             });     
         });
-
+        
 
       function createNoteElement(noteData, isReply = false) {
             const noteElement = document.createElement('div');
