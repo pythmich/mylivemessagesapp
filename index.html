@@ -269,7 +269,7 @@
             notesRef.orderByChild('parentId').equalTo(parentKey).once('value', snapshot => {
                 if (snapshot.exists()) return alert('Only one reply allowed per note!');
 
-                const replyTextreplyText = prompt('Enter your reply:');
+                const replyText = prompt('Enter your reply:');
                 if (replyText) {
                     notesRef.push({
                         text: replyText,
