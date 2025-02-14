@@ -6,14 +6,21 @@
     <title>Voices of Courage: Anonymous Concerns About Bullying</title>
     <link rel="manifest" href="manifest.json">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Quicksand', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #ffe4e1; /* Misty Rose */
+            background-color: #add8e6; /* LightBlue */
+            background-image: url('C:\\Users\\Michael\\OneDrive\\Desktop\\app project\\bckg.png'), 
+                              url('https://www.example.com/pattern-stars.png'); /* Replace with actual URLs of your patterns */
+            background-repeat: no-repeat, repeat;
+            background-attachment: fixed, scroll;
+            background-size: cover, auto;
         }
         h1 {
-            color: #ff6347; /* Tomato */
+            color: #4682b4; /* SteelBlue */
             text-align: center;
             font-size: 2.5em;
         }
@@ -23,8 +30,8 @@
             max-width: 500px;
         }
         #messages {
-            border: 1px solid #ffdab9; /* Peach Puff */
-            background-color: #fff5ee; /* Lavender Blush */
+            border: 1px solid #b0c4de; /* LightSteelBlue */
+            background-color: #e0ffff; /* LightCyan */
             border-radius: 15px;
             width: 80%;
             height: 100px;
@@ -32,41 +39,42 @@
             display: block;
             padding: 10px;
             font-size: 16px;
-            resize:vertical;
+            resize: vertical;
         }
-        
-        #board{
+
+        #board {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 20px;
             padding: 20px;
             max-width: 1200px;
             margin: 0 auto;
-
         }
 
         .message, .reply {
             margin-bottom: 10px;
             padding: 10px;
-            border: 1px solid #ffd700; /* Gold */
-            background-color: #f0e68c; /* Khaki */
+            border: 1px solid #87ceeb; /* SkyBlue */
+            background-color: #afeeee; /* PaleTurquoise */
             border-radius: 10px;
+            background-image: url('https://www.example.com/pattern-dots.png'); /* Replace with actual URL of your pattern */
+            background-repeat: repeat;
         }
         .reply {
             margin-left: 20px;
-            background-color: #e0ffff; /* Light Cyan */
+            background-color: #b0e0e6; /* PowderBlue */
         }
         button {
-            background-color: #ff4500; /* Orange Red */
+            background-color: #4682b4; /* SteelBlue */
             color: white;
-             border-radius: 10px;  
+            border-radius: 10px;
             display: block;
             margin: 0 auto 20px;
             padding: 10px 30px;
             border: none;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s;
         }
 
         #noteInput {
@@ -81,8 +89,8 @@
             resize: vertical;
         }
 
-        .note{
-            background-color: #ffeb3b;
+        .note {
+            background-color: #87cefa; /* LightSkyBlue */
             padding: 15px;
             min-height: 150px;
             border-radius: 5px;
@@ -91,13 +99,15 @@
             white-space: pre-wrap;
             animation: fadeIn 0.3s ease-in;
             position: relative;
+            background-image: url('C:\\Users\\Michael\\OneDrive\\Desktop\\app project\\des11.jpg'); /* Replace with actual URL of your pattern */
+            background-repeat: repeat;
         }
         button:hover {
-            background-color: #ff6347; /* Tomato */
+            background-color: #5f9ea0; /* CadetBlue */
         }
 
         .note.reply {
-            background-color: #a5d6a7;
+            background-color: #afeeee; /* PaleTurquoise */
             margin-left: 20px;
             margin-top: 10px;
         }
@@ -119,11 +129,11 @@
         }
 
         .reply-btn {
-            background-color: #4CAF50;
+            background-color: #4682b4; /* SteelBlue */
         }
 
         .delete-btn {
-            background-color: #f44336;
+            background-color: #5f9ea0; /* CadetBlue */
         }
 
         .note-container {
@@ -138,7 +148,7 @@
         textarea {
             border-radius: 10px;
             padding: 10px;
-            border: 1px solid #ffdab9; /* Peach Puff */
+            border: 1px solid #b0c4de; /* LightSteelBlue */
             width: 100%;
             box-sizing: border-box;
             font-size: 1em;
@@ -156,51 +166,47 @@
 </head>
 <body>
     <h1>Voices of Courage: Anonymous Concerns About Bullying</h1>
-    <textarea id="messages" placeholder="Feel free to express yourself here"></textarea>
+    <textarea id="messages" placeholder="Feel free to express yourself here, your name won't be seen."></textarea>
     <button id="button">Let It Out!</button>
     <div id="board"></div>
-
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
         const PASSWORD = "admin123";
         const firebaseConfig = {
-        apiKey: "AIzaSyDTywvj4dlN5VHq7EqrI-Utrh7VbIiWM_Q",
-        authDomain: "notification-sync-797bc.firebaseapp.com",
-        databaseURL: "https://notification-sync-797bc-default-rtdb.firebaseio.com",
-        projectId: "notification-sync-797bc",
-        storageBucket: "notification-sync-797bc.firebasestorage.app",
-        messagingSenderId: "259481531124",
-        appId: "1:259481531124:web:3afb6a2e906140cb0924a1",
-        measurementId: "G-ZRZ633C4G8"
+            apiKey: "AIzaSyDTywvj4dlN5VHq7EqrI-Utrh7VbIiWM_Q",
+            authDomain: "notification-sync-797bc.firebaseapp.com",
+            databaseURL: "https://notification-sync-797bc-default-rtdb.firebaseio.com",
+            projectId: "notification-sync-797bc",
+            storageBucket: "notification-sync-797bc.appspot.com",
+            messagingSenderId: "259481531124",
+            appId: "1:259481531124:web:3afb6a2e906140cb0924a1",
+            measurementId: "G-ZRZ633C4G8"
         };
 
         firebase.initializeApp(firebaseConfig);
-        const database= firebase.database();
+        const database = firebase.database();
         const notesRef = database.ref('notes');
 
-
-        function addNote(){
+        function addNote() {
             const noteInput = document.getElementById('messages');
             const noteText = noteInput.value.trim();
 
-            // to do remove banned word !=
-            if(noteText){
-
+            if (noteText) {
                 notesRef.push({
-                    text : noteText,
-                    timestamp : firebase.database.ServerValue.TIMESTAMP
+                    text: noteText,
+                    timestamp: firebase.database.ServerValue.TIMESTAMP
                 });
-                noteInput.value = ''
+                noteInput.value = '';
             }
         }
 
         document.getElementById('button').addEventListener('click', addNote);
-     
+
         notesRef.orderByChild('timestamp').on('value', (snapshot) => {
             const board = document.getElementById('board');
-            board.innerHTML = ''; 
+            board.innerHTML = '';
             const notes = [];
 
             snapshot.forEach(childSnapshot => {
@@ -216,7 +222,7 @@
             parentNotes.forEach(parentNote => {
                 const parentContainer = document.createElement('div');
                 parentContainer.className = 'note-container';
-                
+
                 const noteElement = createNoteElement(parentNote);
                 parentContainer.appendChild(noteElement);
 
@@ -227,11 +233,10 @@
                 }
 
                 board.appendChild(parentContainer);
-            });     
-        });
-        
+            });
+        });
 
-      function createNoteElement(noteData, isReply = false) {
+        function createNoteElement(noteData, isReply = false) {
             const noteElement = document.createElement('div');
             noteElement.className = `note${isReply ? ' reply' : ''}`;
             noteElement.textContent = noteData.text;
@@ -239,17 +244,17 @@
             if (!isReply) {
                 const actions = document.createElement('div');
                 actions.className = 'note-actions';
-                
+
                 const replyBtn = document.createElement('button');
                 replyBtn.className = 'reply-btn';
                 replyBtn.textContent = 'Reply';
                 replyBtn.onclick = () => handleReply(noteData.key);
-                
+
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'delete-btn';
                 deleteBtn.textContent = 'Delete';
                 deleteBtn.onclick = () => handleDelete(noteData.key);
-                
+
                 actions.append(replyBtn, deleteBtn);
                 noteElement.appendChild(actions);
             }
@@ -257,14 +262,14 @@
             return noteElement;
         }
 
-      function handleReply(parentKey) {
+        function handleReply(parentKey) {
             const enteredPassword = prompt('Enter password to reply:');
             if (enteredPassword !== PASSWORD) return alert('Incorrect password!');
 
             notesRef.orderByChild('parentId').equalTo(parentKey).once('value', snapshot => {
                 if (snapshot.exists()) return alert('Only one reply allowed per note!');
-                
-                const replyText = prompt('Enter your reply:');
+
+                const replyTextreplyText = prompt('Enter your reply:');
                 if (replyText) {
                     notesRef.push({
                         text: replyText,
@@ -275,7 +280,7 @@
             });
         }
 
-    function handleDelete(noteKey) {
+        function handleDelete(noteKey) {
             const enteredPassword = prompt('Enter password to delete:');
             if (enteredPassword !== PASSWORD) return alert('Incorrect password!');
 
@@ -284,7 +289,6 @@
                 snapshot.forEach(childSnapshot => childSnapshot.ref.remove());
             });
         }
-
     </script>
 </body>
 </html>
