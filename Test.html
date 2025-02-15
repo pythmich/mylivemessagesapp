@@ -13,7 +13,7 @@
             margin: 0;
             padding: 20px;
             background-color: #add8e6; /* LightBlue */
-            background-image: url('C:\\Users\\Michael\\OneDrive\\Desktop\\app project\\bckg.png'), 
+            background-image: url('bckg.png'), 
                               url('https://www.example.com/pattern-stars.png'); /* Replace with actual URLs of your patterns */
             background-repeat: no-repeat, repeat;
             background-attachment: fixed, scroll;
@@ -162,6 +162,32 @@
                 font-size: 1em;
             }
         }
+
+        /* New section for quotes */
+        #quoteSection {
+            text-align: center;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fff5ee; /* Seashell */
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .quote {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            background-color: #f0f8ff; /* AliceBlue */
+            padding: 15px;
+            border-radius: 10px;
+            background-image: url('https://www.example.com/quote-pattern.png'); /* Replace with actual URL of your pattern */
+            background-repeat: repeat;
+            display: inline-block;
+        }
+        .quote img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
@@ -169,6 +195,16 @@
     <textarea id="messages" placeholder="Feel free to express yourself here, your name won't be seen."></textarea>
     <button id="button">Let It Out!</button>
     <div id="board"></div>
+
+    <!-- New section for quotes -->
+    <div id="quoteSection">
+        <div class="quote">
+            "The only way to deal with bullying is to tell someone you trust."
+        </div>
+        <div class="quote">
+            <img src="https://www.example.com/inspirational-quote.jpg" alt="Inspirational Quote">
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
