@@ -99,7 +99,7 @@
             white-space: pre-wrap;
             animation: fadeIn 0.3s ease-in;
             position: relative;
-            background-image: url('C:\\Users\\Michael\\OneDrive\\Desktop\\app project\\des11.jpg'); /* Replace with actual URL of your pattern */
+            background-image: url(''); /* Replace with actual URL of your pattern */
             background-repeat: repeat;
         }
         button:hover {
@@ -148,7 +148,7 @@
         textarea {
             border-radius: 10px;
             padding: 10px;
-            border: 1px solid #b0c4de; /* LightSteelBlue */
+            border: 1px solid #e3ecf8; /* LightSteelBlue */
             width: 100%;
             box-sizing: border-box;
             font-size: 1em;
@@ -162,13 +162,77 @@
                 font-size: 1em;
             }
         }
+
+ /* New section for quotes */
+#quoteSection {
+    text-align: center;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0); /* Transparent */
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.quote {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0); /* Transparent */
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-family: 'Quicksand', sans-serif; /* Use a curvy font like Quicksand */
+    display: inline-block;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Add some shadow for better visibility */
+}
+
+.quote img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+        }
     </style>
 </head>
 <body>
+    <div>
+        <div id="quoteSection">
+            <div class="quote" id="quote1">
+                "The only way to deal with bullying is to tell someone you trust."
+            </div>
+            <div class="quote" id="quote2">
+                "You are braver than you believe, stronger than you seem, and smarter than you think."
+            </div>
+            <div class="quote" id="quote3">
+                <img src="https://www.example.com/inspirational-quote.jpg" alt="Inspirational Quote">
+            </div>
+            <div class="quote" id="quote4">
+                "Kindness is the language which the deaf can hear and the blind can see."
+            </div>
+            <div class="quote" id="quote5">
+                "No one can make you feel inferior without your consent."
+            </div>
+            <div class="quote" id="quote6">
+                "The only time you should look down on someone is when you're helping them up."
+            </div>
+            <div class="quote" id="quote7">
+                <img src="https://www.example.com/motivational-quote.jpg" alt="Motivational Quote">
+            </div>
+            <div class="quote" id="quote8">
+                "Believe you can and you're halfway there."
+            </div>
+    </div>
+    <div>
     <h1>Voices of Courage: Anonymous Concerns About Bullying</h1>
     <textarea id="messages" placeholder="Feel free to express yourself here, your name won't be seen."></textarea>
-    <button id="button">Let It Out!</button>
+    <button id="button">Let It Out!</button></div>
     <div id="board"></div>
+
+
+
+
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -289,6 +353,27 @@
                 snapshot.forEach(childSnapshot => childSnapshot.ref.remove());
             });
         }
+        const quotes = document.querySelectorAll('.quote');
+let currentQuoteIndex = 0;
+
+function showNextQuote() {
+    quotes[currentQuoteIndex].style.display = 'none'; // Hide current quote
+    currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length; // Move to next quote
+    quotes[currentQuoteIndex].style.display = 'block'; // Show next quote
+}
+
+function startQuoteRotation() {
+    if (quotes.length > 0) {
+        quotes.forEach(quote => quote.style.display = 'none'); // Hide all quotes initially
+        quotes[currentQuoteIndex].style.display = 'block'; // Show first quote initially
+        setInterval(showNextQuote, 9000); // Rotate every 9 seconds
+    }
+}
+
+document.getElementById('quoteSection').style.display = 'block'; // Show the quote section
+startQuoteRotation(); // Start rotating quotes
+
+
     </script>
 </body>
 </html>
