@@ -290,6 +290,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <script>
+        
         const PASSWORD = "admin123890";
         const firebaseConfig = {
             apiKey: "AIzaSyDTywvj4dlN5VHq7EqrI-Utrh7VbIiWM_Q",
@@ -396,7 +397,19 @@
                 }
             });
         }
+const notesSection = document.getElementById('board');
 
+
+// Initially hide the notes section
+notesSection.style.display = 'none';
+
+// Prompt for the password to show the notes section
+const enteredPassword = prompt('Enter password to access notes:');
+if (enteredPassword === PASSWORD) {
+    notesSection.style.display = 'block'; // Show the notes section
+} else {
+    alert('Incorrect password!');
+}
         function handleDelete(noteKey) {
             const enteredPassword = prompt('Enter password to delete:');
             if (enteredPassword !== PASSWORD) return alert('Incorrect password!');
