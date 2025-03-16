@@ -403,7 +403,7 @@ const notesSection = document.getElementById('board');
 // Initially hide the notes section
 
 // Prompt for the password to show the notes section
-const enteredPassword = prompt('Enter password to access notes:');
+const enteredPassword = prompt('If not admin press cancel:');
 if (enteredPassword !== PASSWORD) {
     notesSection.style.display = 'none';
 }
