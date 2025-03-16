@@ -401,14 +401,11 @@ const notesSection = document.getElementById('board');
 
 
 // Initially hide the notes section
-notesSection.style.display = 'none';
 
 // Prompt for the password to show the notes section
 const enteredPassword = prompt('Enter password to access notes:');
-if (enteredPassword === PASSWORD) {
-    notesSection.style.display = 'block'; // Show the notes section
-} else {
-    alert('Incorrect password!');
+if (enteredPassword !== PASSWORD) {
+    notesSection.style.display = 'none';
 }
         function handleDelete(noteKey) {
             const enteredPassword = prompt('Enter password to delete:');
